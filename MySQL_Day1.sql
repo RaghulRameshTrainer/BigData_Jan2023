@@ -132,7 +132,114 @@ ORDER BY 2 DESC;
 
 SELECT * FROM COMPANY;
 
+-- 1. Please write a query to get the minimum and maximum salary offered by each company?
+-- Company, Min_Salary, Max_Salary
+SELECT Company, MAX(salary) , MIN(salary) FROM company GROUP BY Company;
+-- 2. Query to get the total salary paid by each company in the descending order based on total_salary column.
+-- Company, Total_Salary
+SELECT Company, SUM(salary) as total_salary FROM company GROUP BY Company ORDER BY total_salary DESC;
+-- 3. Write a query to get the total number of employees in each company, place wise.
+-- Company, Place, Total_Employees
+SELECT Company, Place, count(*) as Total_employees FROM company GROUP BY Company, Place ORDER BY Company,Place;
 
 
+-- CONSTRAINTS
+-- UNIQUE
+-- NOT NULL
+-- PRIMARY KEY
+-- FOREIGN KEY
+-- CHECK
+-- DEFAULT
+
+CREATE TABLE unique_table(
+empid INT UNIQUE,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT,
+city VARCHAR(20)
+);
+
+INSERT INTO unique_table VALUES (1000,'Raja','M',35,'Chennai');
+INSERT INTO unique_table VALUES (1000,'Bala','M',40,'Bangalore');  -- ERROR DUE TO DUPLICATE empid
+INSERT INTO unique_table VALUES (1001,'Bala','M',40,'Bangalore');
+
+SELECT * FROM unique_table;
+INSERT INTO unique_table(empname, gender, age, city) VALUES ('Durga','F',36,'Hyderabad');
+INSERT INTO unique_table(empname, gender, age, city) VALUES ('Satya','F',36,'Pune');
+
+-- NOT NULL CONSTRAINT
+
+CREATE TABLE notnull_table(
+empid INT NOT NULL,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT,
+city VARCHAR(20)
+);
+
+INSERT INTO notnull_table VALUES (1000,'Raja','M',35,'Chennai');
+INSERT INTO notnull_table VALUES (1000,'Bala','M',40,'Bangalore'); 
+INSERT INTO notnull_table VALUES (1001,'Bala','M',40,'Bangalore');
+SELECT * FROM notnull_table;
+INSERT INTO notnull_table(empname, gender, age, city) VALUES ('Durga','F',36,'Hyderabad'); -- ERROR since NULL for empid
+
+-- UNIQUE and NOT NULL 
 
 
+CREATE TABLE unique_notnull_tbl (
+empid INT UNIQUE NOT NULL,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT,
+city VARCHAR(20)
+);
+
+INSERT INTO unique_notnull_tbl VALUES (1000,'Raja','M',35,'Chennai');
+INSERT INTO unique_notnull_tbl VALUES (1000,'Bala','M',40,'Bangalore'); -- Error due to duplicate value 1000
+INSERT INTO unique_notnull_tbl VALUES (1001,'Bala','M',40,'Bangalore');
+SELECT * FROM unique_notnull_tbl;
+INSERT INTO unique_notnull_tbl(empname, gender, age, city) VALUES ('Durga','F',36,'Hyderabad'); -- ERROR since NULL for empid
+
+-- CHECK CONSTRAINT
+
+CREATE TABLE check_table (
+empid INT UNIQUE NOT NULL,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT CHECK (age >0 AND age <=100),
+city VARCHAR(20)
+);
+
+INSERT INTO check_table VALUES (1000,'Raja','M',35,'Chennai');
+SELECT * FROM check_table;
+INSERT INTO check_table VALUES (1001,'Bala','M',140,'Bangalore'); -- Fails
+INSERT INTO check_table VALUES (1001,'Bala','M',-1,'Bangalore');  -- Fails
+INSERT INTO check_table VALUES (1001,'Bala','M',40,'Bangalore');
+
+
+CREATE TABLE check_table_2 (
+empid INT UNIQUE NOT NULL,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT CHECK (age >0 AND age <=100),
+city VARCHAR(20) CHECK (city IN ('Chennai','Bangalore','Hyderabad'))
+);
+
+INSERT INTO check_table_2 VALUES (1000,'Raja','M',35,'Chennai');
+SELECT * FROM check_table_2;
+INSERT INTO check_table_2 VALUES (1001,'Chandra','M',35,'Pune'); -- Fails
+INSERT INTO check_table_2 VALUES (1001,'Chandra','M',35,'Hyderabad'); 
+
+
+CREATE TABLE default_table (
+empid INT UNIQUE NOT NULL,
+empname VARCHAR(20),
+gender CHAR(1),
+age INT CHECK (age >0 AND age <=100),
+city VARCHAR(20) DEFAULT 'Hyderabad'
+);
+
+INSERT INTO default_table VALUES (1000,'Raja','M',35,'Chennai');
+SELECT * FROM default_table;
+INSERT INTO default_table VALUES (1001,'Chandra','M',35,'Pune'); 
+INSERT INTO default_table(empid,empname,gender,age) VALUES (1002,'Venkatesh','M',35); 
