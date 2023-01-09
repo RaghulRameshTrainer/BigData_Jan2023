@@ -243,3 +243,39 @@ INSERT INTO default_table VALUES (1000,'Raja','M',35,'Chennai');
 SELECT * FROM default_table;
 INSERT INTO default_table VALUES (1001,'Chandra','M',35,'Pune'); 
 INSERT INTO default_table(empid,empname,gender,age) VALUES (1002,'Venkatesh','M',35); 
+
+-- PRIMAY KEY ( UNIQUE + NOT NULL)
+CREATE TABLE pk_table (
+empid INT PRIMARY KEY,    -- Simple Primary Key
+empname VARCHAR(20),
+gender CHAR(1),
+age INT CHECK (age >0 AND age <=100),
+city VARCHAR(20) DEFAULT 'Hyderabad'
+);
+
+INSERT INTO pk_table VALUES(1000,'Raja','M',35,'Chennai');
+SELECT * FROM pk_table;
+INSERT INTO pk_table VALUES(1000,'Raja','M',35,'Chennai');
+INSERT INTO pk_table(empname, gender, age, city) VALUES('Raja','M',35,'Chennai');
+
+-- SHOW INDEXES FROM pk_table;
+
+CREATE TABLE comp_pk_table (
+empid INT ,    
+empname VARCHAR(20),
+gender CHAR(1),
+age INT CHECK (age >0 AND age <=100),
+city VARCHAR(20) DEFAULT 'Hyderabad',
+constraint pk_key primary key(empid, empname)  -- composite primary key
+);
+
+INSERT INTO comp_pk_table VALUES(1000,'Raja','M',35,'Chennai');
+SELECT * FROM comp_pk_table;
+INSERT INTO comp_pk_table VALUES(1000,'Bala','M',35,'Chennai');
+INSERT INTO comp_pk_table VALUES(1000,'Bala','M',40,'Chennai'); -- Error since it is duplicate 1000-Bala
+INSERT INTO comp_pk_table(empid,gender,age,city) VALUES(1000,'M',35,'Chennai');  -- Error since it is null for empname
+INSERT INTO comp_pk_table VALUES(1001,'Bala','M',35,'Chennai');
+
+
+
+INSERT INTO comp_pk_table(empname, gender, age, city) VALUES('Raja','M',35,'Chennai');
