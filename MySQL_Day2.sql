@@ -138,3 +138,79 @@ SELECT e1.empname, e1.salary as emp_salary , e2.salary as mgr_salary, e2.empname
 FROM employee e1, employee e2
 WHERE e1.mgr_id=e2.empid
 AND e1.salary>e2.salary;
+
+-- SUB QUERY
+
+SELECT * FROM CUSTOMER_TBL;
+
+SELECT * FROM ORDERS;
+
+SELECT * FROM CUSTOMER_TBL 
+WHERE CUSTID NOT IN (
+SELECT DISTINCT CUSTID FROM ORDERS
+);
+
+-- PLEASE GET ME THE CUSTOMERS DETAILS WHO DID NOT MADE ANY TRANSACTION
+-- [ USING THE LEFT JOIN ]
+SELECT * FROM CUSTOMER_TBL c LEFT JOIN ORDERS o ON c.custid=o.custid
+WHERE o.order_id IS NULL;
+
+-- CO-RELATED SUB QUERY 
+CREATE TABLE department (
+dept_id INT,
+empname VARCHAR(100),
+salary INT,
+dept_name VARCHAR(100)
+);
+
+INSERT INTO department VALUES(1,'Levin',100000,'HR'),
+							  (2,'Dinesh',50000,'Finance'),
+								(3,'Anita',70000,'IT'),
+                                (3,'Mahima',100000,'IT'),
+                                (4,'Kavita',200000,'IT'),
+                                (1,'Siva',60000,'HR'),
+                                (1,'Vnkatesh',80000,'HR'),
+                                (2,'Arun',30000,'Finance'),
+                                (2,'Ramesh',50000,'Finance');
+                                
+SELECT * FROM department;
+
+SELECT * FROM department d1
+WHERE salary > (
+SELECT avg(salary) FROM department d2
+WHERE d2.dept_id=d1.dept_id
+GROUP BY dept_id);
+
+-- ALTER QUERY
+
+DESC employee;
+SHOW create table  employee;
+SELECT * FROM employee;
+
+ALTER TABLE employee
+ADD COLUMN city VARCHAR(20) DEFAULT 'Hyderabad';
+
+ALTER TABLE employee
+DROP COLUMN mgr_id;
+
+ALTER TABLE employee
+MODIFY COLUMN empname VARCHAR(25) NOT NULL;
+
+ALTER TABLE employee
+RENAME COLUMN city TO location;
+
+RENAME TABLE employee TO developer;
+
+ALTER TABLE developer 
+RENAME TO employee;
+
+SELECT * FROM employee;
+
+SELECT * FROM employee WHERE salary<10000  -- Mohan. Shanmugam, Ranga
+UNION ALL 
+SELECT * FROM employee WHERE salary>7500;  -- Bala, Venkateshm Ranga
+
+
+SELECT * FROM employee WHERE salary<10000  -- Mohan. Shanmugam, Ranga
+UNION  
+SELECT * FROM employee WHERE salary>7500; 
