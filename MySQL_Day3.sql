@@ -68,3 +68,71 @@ SELECT * FROM tcs_info;
 ALTER TABLE COMPANY RENAME COLUMN Place to City;
 
 DROP VIEW comp_info;
+
+-- INDEX 
+SELECT * FROM company WHERE city IN ('Delhi','Chennai');
+
+SELECT * FROM company ;
+
+SHOW INDEXES  FROM company;
+
+CREATE INDEX comp_city_idx ON company(Age);
+CREATE INDEX comp_comp_idx ON CUSTOMER(company);
+
+-- Windowing Funtions(row_number, rank, dense_rank, lead, lag)
+
+SELECT * FROM company;
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, row_number() over(order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=10;
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, row_number() over(partition by company order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=3;
+
+SELECT * FROM ORDERS;
+CREATE INDEX order_prod_idx ON ORDERS(prodname);
+
+SHOW INDEXES FROM ORDERS;
+
+-- ---------------------------------------------------------------
+
+SELECT * FROM company ORDER BY SALARY DESC LIMIT 3;
+
+SELECT *, rk FROM (
+SELECT * , row_number() OVER(partition by company ORDER BY salary DESC) as rk FROM company) tbl
+WHERE rk<=2;
+
+SELECT *, rk FROM (
+SELECT * , row_number() OVER(partition by company,City ORDER BY salary DESC) as rk FROM company) tbl
+WHERE rk<=2;
+
+
+-- -------------rank----------------
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, rank() over(order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=2;
+
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, rank() over(partition by company,city order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=2;
+
+-- -------------dense_rank----------------
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, dense_rank() over(order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=2;
+
+
+SELECT company, age, salary, city, country, gender , rnk FROM (
+SELECT company, age, salary, city, country, gender, dense_rank() over(partition by company order by salary DESC) rnk
+FROM company) t1
+WHERE rnk<=2;
