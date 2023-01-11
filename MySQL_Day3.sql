@@ -136,3 +136,73 @@ SELECT company, age, salary, city, country, gender , rnk FROM (
 SELECT company, age, salary, city, country, gender, dense_rank() over(partition by company order by salary DESC) rnk
 FROM company) t1
 WHERE rnk<=2;
+
+-- ---------------------------- lead ----------------------------
+
+CREATE TABLE cust_trans(
+custid INT,
+product VARCHAR(100),
+amount INT,
+trans_date date
+);
+
+INSERT INTO cust_trans VALUES(1000, 'TV', 50000, '2023-01-01');
+INSERT INTO cust_trans VALUES(1000, 'Mobile', 30000, '2023-01-10');
+INSERT INTO cust_trans VALUES(1000, 'Pendrive', 10000, '2023-01-11');
+
+INSERT INTO cust_trans VALUES(1001, 'Laptop', 70000, '2023-01-01');
+INSERT INTO cust_trans VALUES(1001, 'Desktop', 60000, '2023-01-10');
+INSERT INTO cust_trans VALUES(1001, 'Charger', 15000, '2023-01-11');
+
+
+SELECT * FROM cust_trans;
+
+SELECT custid, product,amount, LEAD(amount) OVER (partition by custid) as next_amt, trans_date FROM cust_trans;
+SELECT custid, product,amount, LEAD(amount,2) OVER (partition by custid) as next_amt, trans_date FROM cust_trans;
+
+SELECT custid, product,amount,prev_amt,(amount-coalesce(prev_amt,0)) as diff,trans_date  FROM (
+SELECT custid, product,amount, LAG(amount,1,1000) OVER (partition by custid) as prev_amt, trans_date FROM cust_trans) tbl;
+
+
+
+-- COUNT, MIN, MAX, SUM, AVG
+
+-- STRING FUNCTION
+
+SELECT * FROM cust_trans;
+
+SELECT product, amount FROM cust_trans;
+SELECT concat(product,'-',amount) as prod_details FROM cust_trans;
+SELECT concat(product,'-',amount,'-',trans_date) as prod_details FROM cust_trans;
+SELECT concat_ws('-',custid,product,amount,trans_date) as prod_details FROM cust_trans;
+
+SELECT upper(product), amount FROM cust_trans;
+SELECT lower(product), amount FROM cust_trans;
+
+SELECT replace(product,'e','E') FROM cust_trans;
+
+SELECT LTRIM(product) FROM cust_trans;  -- check 
+
+SELECT reverse(product) FROM cust_trans;
+
+-- SPECIAL FUNCTION
+
+Select * FROM company;
+
+SELECT coalesce(company,'UNKNOWN'), salary FROM company;
+
+SELECT * FROM customer;
+INSERT INTO customer(custid, city) VALUES(1003,'Hyderabad');
+
+SELECT coalesce(custname,'MISSING'), city FROM customer;
+
+ALTER TABLE customer
+MODIFY COLUMN custname varchar(20);
+
+SELECT company, IF(salary=0,0,salary) FROM company;
+
+-- CASE
+-- DATE FUCNTION
+
+SELECT * FROM cust_trans;
+
