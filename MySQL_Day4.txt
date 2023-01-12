@@ -180,3 +180,186 @@ BEGIN
     END LOOP;
 END;
 /
+===================================================  FUNCTION ================================
+
+-- PROCEDURE 
+
+CREATE OR REPLACE PROCEDURE hello
+AS
+BEGIN
+    dbms_output.put_line('Hello Everyone!!!, Happy Pongal!');
+END;
+/
+
+
+-- call the procedurw
+EXECUTE hello;
+
+BEGIN
+    hello;
+END;
+/
+
+-- Parameters
+-- IN 
+-- OUT 
+-- IN OUT 
+
+
+DECLARE
+    a NUMBER;
+    b NUMBER;
+    c NUMBER;
+PROCEDURE findMax(x IN NUMBER,y IN NUMBER,z OUT NUMBER) IS
+BEGIN
+    IF x > y THEN
+        z := x;
+    ELSE
+        z := y;
+
+    END IF;   
+END;
+BEGIN
+    a := 55;
+    b := 12;
+    findMax(a,b,c);
+    dbms_output.put_line('Maximum of ' || a || ' and ' || b || ' is :' || c);
+END;
+/
+
+
+DECLARE
+    x INTEGER;
+ PROCEDURE squareNum(a IN OUT INTEGER) IS
+ BEGIN
+        a := a * a;
+ END;
+BEGIN
+    x:=10;
+    squareNum(x);
+     dbms_output.put_line('SQUARE OF 10 : ' || x);
+END;
+/
+
+
+
+-- 1 : Create a procedure to find a big number from given 3 integres
+
+
+CREATE TABLE customer (
+    custid INTEGER,
+    custname VARCHAR2(100),
+    age INTEGER,
+    city VARCHAR2(100)
+);
+
+
+INSERT INTO customer VALUES(1,'Ramesh',38,'Chennai');
+INSERT INTO customer VALUES(2,'Malini',35,'Bangalore');
+INSERT INTO customer VALUES(3,'Ashwin',22,'Hyderabad');
+INSERT INTO customer VALUES(4,'Tharani',31,'Chennai');
+INSERT INTO customer VALUES(5,'Sekar',30,'Chennai');
+INSERT INTO customer VALUES(6,'Rani',36,'Hyderabad');
+
+SELECT * FROM customer order by custid;
+
+
+CREATE OR REPLACE FUNCTION totalcustomers
+RETURN integer IS
+    cnt INTEGER;
+ BEGIN
+    SELECT count(*) INTO cnt FROM customer;
+
+    RETURN cnt;
+ END;
+ /
+
+DECLARE
+
+    tot INTEGER;
+ BEGIN
+    tot := totalcustomers();
+    dbms_output.put_line('Total number of customer : '|| tot);
+ END;
+
+
+DECLARE
+    cid INTEGER;
+    c_age INTEGER;
+FUNCTION getAge(c_id IN INTEGER)
+RETURN INTEGER IS
+        cust_age INTEGER;
+BEGIN
+        SELECT age into  cust_age FROM customer WHERE custid=c_id;
+        RETURN cust_age;
+END;
+BEGIN
+    cid:=1;
+    c_age := getAge(cid);
+    dbms_output.put_line('Customer age is : ' || c_age);
+END;
+ /
+
+
+CREATE OR REPLACE FUNCTION getAge(c_id IN INTEGER)
+RETURN INTEGER IS
+        cust_age INTEGER;
+BEGIN
+        SELECT age into  cust_age FROM customer WHERE custid=c_id;
+        RETURN cust_age;
+END;
+/
+
+DECLARE
+    c_a INTEGER;
+ BEGIN
+    c_a := getAge(2);
+    dbms_output.put_line('Customer age is : ' || c_a);
+ END;
+ /
+
+ DECLARE
+    c_a INTEGER;
+ BEGIN
+    c_a := getAge(5);
+    dbms_output.put_line('Customer age is : ' || c_a);
+ END;
+ /
+
+ DECLARE
+    a NUMBER;
+    b NUMBER;
+    c NUMBER;
+FUNCTION findMax(x IN NUMBER,y IN NUMBER)
+RETURN NUMBER IS
+    big_num INTEGER;
+BEGIN
+    IF x > y THEN
+        big_num := x;
+    ELSE
+        big_num := y;
+
+    END IF;  
+
+    RETURN big_num; 
+END;
+BEGIN
+    a := 55;
+    b := 12;
+    c:=findMax(a,b);
+    dbms_output.put_line('Maximum of ' || a || ' and ' || b || ' is :' || c);
+END;
+/
+
+
+
+CREATE OR REPLACE FUNCTION nextAge(a IN INTEGER)
+RETURN INTEGER IS
+    next_age INTEGER;
+ BEGIN
+    next_age:=a+1;
+    RETURN next_age;
+ END;
+ /
+
+ SELECT custname, age as cur_age , nextAge(age) as next_age FROM customer;
