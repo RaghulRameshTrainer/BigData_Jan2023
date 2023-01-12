@@ -363,3 +363,73 @@ RETURN INTEGER IS
  /
 
  SELECT custname, age as cur_age , nextAge(age) as next_age FROM customer;
+
+-- CURSOR 
+
+ DECLARE
+    c_cname customer.custname%type;
+    c_age customer.age%type;
+    c_city customer.city%type;
+    CURSOR cust_data IS
+        SELECT custname, age, city FROM customer;
+
+ BEGIN
+    OPEN cust_data;
+    LOOP
+        FETCH cust_data INTO c_cname,c_age,c_city;
+        EXIT WHEN cust_data%notfound;
+        dbms_output.put_line('Name: '|| c_cname || ' , age: '|| c_age || ', city: '|| c_city);
+    END LOOP;
+    CLOSE cust_data;
+
+ END;
+ /
+
+ -- TRIGGER
+
+ CREATE TABLE alumni (
+    custid INTEGER,
+    custname VARCHAR2(100),
+    age INTEGER,
+    city VARCHAR2(100)
+);
+
+CREATE OR REPLACE TRIGGER add_cust_alumni
+BEFORE DELETE ON customer
+FOR EACH ROW 
+BEGIN
+    dbms_output.put_line('Trigger called for loading the data into ALUMNI table');
+    INSERT INTO alumni VALUES(:OLD.custid, :OLD.custname, :OLD.age, :OLD.city);
+END;
+/
+
+DELETE FROM customer ;
+
+SELECT * FROM alumni;
+
+
+CREATE PACKAGE sales_process AS
+    PROCEDURE addSalesData(sid IN INTEGER)
+
+    FUNCTION totalSalValue():
+ END sales_process;
+ /
+
+
+ -- EXCEPTION HANDLING
+  DECLARE
+    cid INTEGER := 6;
+    c_name customer.custname%type;
+   BEGIN
+        SELECT custname INTO c_name FROM customer WHERE custid=cid;
+        DBMS_OUTPUT.PUT_LINE('Customer Name:' || c_name);
+
+        EXCEPTION
+            WHEN no_data_found THEN
+                dbms_output.put_line('No Customer with custid: ' || cid);
+            WHEN too_many_rows THEN
+                dbms_output.put_line('cursor does not exists!');
+            WHEN others THEN
+                dbms_output.put_line('Unknown Exceptions!');
+   END;
+   /
