@@ -1,0 +1,55 @@
+1. Write a code to print the values that are duplicate in my list given below
+	nums=[1,2,3,4,5,2,1,5,1,2]
+
+2.Write a code to print all the number which are divisible by 5 and 3 completely from 1-100
+Hint: Please make it using LIST COMPREHENSION
+
+3.Create a calc funtion which takes 3 argument(no1, no2, ops).
+Valid ops(operations) are : +,-,*,**,/
+and give the result back to user
+
+4. State the difference between LIST and TUPLE?
+
+5.Create a decorator function for the following function 
+	def account(name,deposit,pan):
+		print("Account has been created successfully:")
+		print("Please find the details below:")
+		print("name:",name)
+		print("balance:",balance)
+		print("pan number:",pan)
+
+	1. deposit amount should be 10000 and above
+	2. pan card must be a valid number that
+		a) the 5th chacter of the PAN should be first letter of the customer name
+		b)The fist 5 charater must be alphabet and next 4 digit should be a number and last digist should be a character. Overall it should be 10 character length
+
+	If any of the above checks fails, throw an exceptions. Else get the function executed
+
+6. Create a class Product.
+	a) Constructor with product list and count
+		Ex:
+			{'Mobile': 10,
+			'Laptop': 20,
+			'Desktop': 15}
+	
+	b). Create a method to purchase the available product. For example if user purchase a mobile then make the update in product list as
+		{'Mobile': 9,
+			'Laptop': 20,
+			'Desktop': 15}
+
+		Have 5 purchase made
+
+	c) create a method : get_product_count(prod_type)
+		When user calls it with the type, retun the available count for the particular paroduct
+		For Ex:
+			product_count("Laptop") ==> 20
+
+	d) Create a new method to add a new product name with count
+		Ex:
+			add_product("TV",100)
+		Get it added in the existing product lits
+
+			{'Mobile': 10,
+			'Laptop': 20,
+			'Desktop': 15,
+			'TV':100}
